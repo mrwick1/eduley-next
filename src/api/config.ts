@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_ENDPOINTS, API_URL, BASE_URL } from "./end-points";
+import { API_ENDPOINTS, BASE_URL } from "./end-points";
 
 // Function to get auth token
 const getAuthToken = () => {

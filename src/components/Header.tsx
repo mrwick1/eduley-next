@@ -8,7 +8,7 @@ import { Bell, Menu, X } from "lucide-react"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { useTheme } from "@/context/ThemeContext"
-import { useRouter, usePathname } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 // Static header content that will be rendered initially
 const StaticHeader = () => (
@@ -77,7 +77,6 @@ const NavLink = ({ href, children }: { href: string; children: React.ReactNode }
 
 // Dynamic header with full functionality
 const DynamicHeader = () => {
-  const router = useRouter()
   const pathname = usePathname()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)

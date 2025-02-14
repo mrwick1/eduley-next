@@ -43,7 +43,7 @@ export default function ProgramsList() {
       {/* Error message */}
       {error && (
         <div className="text-center mt-8 p-4">
-          <p className="text-red-500">Failed to load programs</p>
+          <p className="text-red-500">Couldn&apos;t load programs. Please try again.</p>
           <button
             onClick={refetch}
             className="mt-2 text-primary hover:underline"

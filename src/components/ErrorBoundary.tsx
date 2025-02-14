@@ -20,8 +20,8 @@ export class ErrorBoundary extends Component<Props, State> {
     return { hasError: true };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught error:', error, errorInfo);
+  public componentDidCatch(error: Error) {
+    this.setState({ hasError: true });
   }
 
   public render() {
@@ -33,7 +33,7 @@ export class ErrorBoundary extends Component<Props, State> {
               Oops! Something went wrong
             </h2>
             <p className="text-gray-600 mb-4">
-              We're having trouble loading this page. Please try refreshing.
+              We&apos;re having trouble loading this page. Please try refreshing.
             </p>
             <button
               onClick={() => window.location.reload()}

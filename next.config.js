@@ -17,13 +17,6 @@ const nextConfig = {
     ],
     unoptimized: true,
   },
-  // Add static page generation configuration
-  generateStaticParams: async () => {
-    return {
-      // Add any dynamic paths that need to be pre-rendered
-      '/': { revalidate: 3600 }, // Revalidate every hour
-    };
-  },
   experimental: {
     optimizeCss: true,
     scrollRestoration: true,
