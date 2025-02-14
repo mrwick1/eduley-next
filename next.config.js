@@ -18,7 +18,8 @@ const nextConfig = {
     unoptimized: true,
   },
   experimental: {
-    optimizeCss: true,
+    // Remove optimizeCss if installing critters doesn't work
+    // optimizeCss: true,
     scrollRestoration: true,
   },
 }

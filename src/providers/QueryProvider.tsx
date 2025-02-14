@@ -13,7 +13,6 @@ export default function QueryProvider({ children }: PropsWithChildren) {
             gcTime: 10 * 60 * 1000,   // Keep unused data for 10 minutes
             refetchOnWindowFocus: false, // Don't refetch on window focus
             retry: 1, // Only retry failed requests once
-            suspense: true, // Enable suspense by default
           },
         },
       })

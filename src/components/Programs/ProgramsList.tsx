@@ -64,7 +64,7 @@ export default function ProgramsList() {
       {/* No more programs message */}
       {!hasNextPage && allPrograms.length > 0 && (
         <div className="text-center mt-12 py-8">
-          <p className="text-gray-600">You've reached the end of the list</p>
+          <p className="text-gray-600">You&apos;ve reached the end of the list</p>
         </div>
       )}
 

@@ -1,7 +1,7 @@
 import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
 import api from '@/api/config';
 import { API_ENDPOINTS } from '@/api/end-points';
-import { Program } from '@/app/page';
+import { Program } from '@/types/program';
 
 const ITEMS_PER_PAGE = 12;
 
@@ -30,6 +30,5 @@ export function usePrograms() {
     placeholderData: keepPreviousData,
     staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
     gcTime: 10 * 60 * 1000,   // Keep unused data in cache for 10 minutes
-    suspense: true, // Enable suspense mode
   });
 } 

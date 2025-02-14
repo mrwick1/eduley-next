@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '@/api/config';
 import { API_ENDPOINTS } from '@/api/end-points';
-import { Program } from '@/app/page';
+import { Program } from '@/types/program';
 
 interface ProgramsResponse {
   results: Program[];

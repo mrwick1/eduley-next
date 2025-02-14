@@ -77,7 +77,6 @@ const NavLink = ({ href, children }: { href: string; children: React.ReactNode }
 
 // Dynamic header with full functionality
 const DynamicHeader = () => {
-  const pathname = usePathname()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { config } = useTheme()
