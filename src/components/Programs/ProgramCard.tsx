@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Program } from '@/types/program';
 import { Clock, BarChart2, User, ArrowRight } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
@@ -11,14 +12,26 @@ interface ProgramCardProps {
 
 const ProgramCard = ({ program }: ProgramCardProps) => {
   const { config } = useTheme();
+  const router = useRouter();
+  console.log(program,'program');
+  // Updated price formatting with Free case
+  const priceDisplay = program.is_course_free
+    ? "FREE"
+    : `${program.currency.prefix} ${Number(program.price).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })}`;
 
-  // Format price display
-  const priceDisplay = program.is_course_free || program.price === 0
-    ? "Free"
-    : `${program.currency.prefix}${program.price}`;
+  const handleClick = () => {
+    router.push(`/program/${program.slug}`);
+  };
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden group hover:shadow-2xl transition-all duration-300 shadow-[0_3px_15px_rgb(0,0,0,0.1)] relative">
+    <div 
+      onClick={handleClick}
+      className="group bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 
+                dark:border-gray-700 hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden"
+    >
       {/* Decorative elements */}
       <div 
         className="absolute top-0 right-0 w-20 h-20 opacity-10 rounded-bl-full"
@@ -51,22 +64,23 @@ const ProgramCard = ({ program }: ProgramCardProps) => {
 
       <div className="p-5 space-y-4">
         <div className="flex items-center gap-2">
-          <div className="flex items-center text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
+          <div className="flex items-center text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
             <Clock className="w-3.5 h-3.5 mr-1" />
             {program.duration_in_weeks}w
           </div>
-          <div className="flex items-center text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
+          <div className="flex items-center text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
             <BarChart2 className="w-3.5 h-3.5 mr-1" />
             {program.course_level.charAt(0).toUpperCase() + program.course_level.slice(1)}
           </div>
         </div>
 
         <div>
-          <h3 className="text-lg font-bold mb-2 line-clamp-2 text-gray-900 group-hover:text-primary transition-colors">
+          <h3 className="text-lg font-bold mb-2 line-clamp-2 text-gray-900 dark:text-white 
+                       group-hover:text-primary dark:group-hover:text-primary transition-colors">
             {program.name}
           </h3>
           {program.short_description && (
-            <p className="text-gray-600 text-sm line-clamp-2">
+            <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2">
               {program.short_description}
             </p>
           )}
@@ -79,19 +93,16 @@ const ProgramCard = ({ program }: ProgramCardProps) => {
           >
             <User className="w-4 h-4" style={{ color: config?.primary_color }} />
           </div>
-          <span className="text-sm text-gray-700 font-medium">
-            {program.instructor_detail?.iap_user?.first_name || 'Unknown'} 
-            {' '}
-            {program.instructor_detail?.iap_user?.last_name}
+          <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">
+            {program.instructor_detail?.iap_user?.first_name || 'Unknown'}
           </span>
         </div>
 
-        <div className="pt-4 border-t border-gray-100 flex justify-between items-center">
+        <div className="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
           <div>
-            <p className="text-xs text-gray-500 mb-1">Course Fee</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Course Fee</p>
             <span 
-              className={`text-lg font-bold ${(program.is_course_free || program.price === 0) ? 'text-green-600' : ''}`}
-              style={{ color: (program.is_course_free || program.price === 0) ? undefined : config?.primary_color }}
+              className={`text-lg font-bold text-gray-900 dark:text-white`}
             >
               {priceDisplay}
             </span>

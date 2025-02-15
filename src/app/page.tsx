@@ -29,31 +29,36 @@ export async function generateStaticParams() {
   return [];
 }
 
-// Fetch data at build time
-async function getFeaturedPrograms(): Promise<Program[]> {
+async function getLandingPageData() {
   try {
-    const response = await api.get(API_ENDPOINTS.COURSE.BASE, {
-      params: {
-        limit: 8,
-        offset: 0,
-      },
-    });
-    return response.data.results;
+    const response = await api.get(API_ENDPOINTS.LANDING_PAGE);
+    return {
+      banner_images: response.data.banner_images || [],
+      top_courses: response.data.top_courses || [],
+      description: response.data.description || '',
+      video_title: response.data.video_title || '',
+      video: response.data.video || '',
+    };
   } catch (error) {
-    console.error('Error fetching featured programs:', error);
-    return [];
+    console.error('Error fetching landing page data:', error);
+    return { 
+      banner_images: [],
+      top_courses: [],
+      description: '',
+      video_title: '',
+      video: '',
+    };
   }
 }
 
 // Static page component
 export default async function Home() {
-  // Get data at build time
-  const programs = await getFeaturedPrograms();
+  const landingData = await getLandingPageData();
 
   return (
-    <main>
-      <Hero />
-      <FeaturedPrograms initialPrograms={programs} />
+    <main className="bg-white dark:bg-gray-950 min-h-screen">
+      <Hero initialBanners={landingData.banner_images} />
+      <FeaturedPrograms initialPrograms={landingData.top_courses} />
     </main>
   );
 }

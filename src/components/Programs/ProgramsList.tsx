@@ -1,10 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { Search } from 'lucide-react';
 import ProgramCard from '@/components/Programs/ProgramCard';
 import ProgramsSkeleton from '@/components/Programs/ProgramsSkeleton';
 import { usePrograms } from '@/hooks/usePrograms';
+import { useDebounce } from '@/hooks/useDebounce';
 import { Program } from '@/types/program';
 
 interface ProgramsListProps {
@@ -14,7 +17,58 @@ interface ProgramsListProps {
   };
 }
 
+function SearchHeader({ 
+  searchTerm, 
+  setSearchTerm, 
+  totalCount 
+}: { 
+  searchTerm: string; 
+  setSearchTerm: (value: string) => void; 
+  totalCount?: number;
+}) {
+  return (
+    <div className="w-full py-8 mb-8">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col md:flex-row md:items-top md:justify-between gap-6">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Explore Programs
+          </h1>
+          <div className="w-full md:w-96">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search programs..."
+                className="block w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-lg 
+                         bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+                         focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
+                         placeholder-gray-500 dark:placeholder-gray-400
+                         transition-colors duration-200"
+              />
+            </div>
+            {totalCount !== undefined && (
+              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                Found {totalCount} programs
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ProgramsList({ initialData }: ProgramsListProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+  const debouncedSearch = useDebounce(searchTerm, 500);
+
   const { ref, inView } = useInView({
     threshold: 0,
     rootMargin: '100px',
@@ -28,7 +82,10 @@ export default function ProgramsList({ initialData }: ProgramsListProps) {
     isFetchingNextPage,
     status,
     isLoading
-  } = usePrograms(initialData);
+  } = usePrograms({ 
+    initialData,
+    search: debouncedSearch 
+  });
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -36,46 +93,87 @@ export default function ProgramsList({ initialData }: ProgramsListProps) {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  if (isLoading ) return <ProgramsSkeleton />;
+  // Update URL when debounced search changes
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    if (debouncedSearch) {
+      params.set('search', debouncedSearch);
+    } else {
+      params.delete('search');
+    }
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [debouncedSearch, pathname, router, searchParams]);
+
+  if (isLoading) return (
+    <>
+      <SearchHeader 
+        searchTerm={searchTerm} 
+        setSearchTerm={setSearchTerm} 
+      />
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {[...Array(8)].map((_, index) => (
+            <div 
+              key={index}
+              className="rounded-lg border border-gray-200 dark:border-gray-700 p-4 space-y-3"
+            >
+              <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 animate-pulse" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 animate-pulse" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 animate-pulse" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
 
   const allPrograms = data?.pages.flatMap(page => page.results) ?? [];
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {allPrograms.map((program) => (
-          <ProgramCard key={program.id} program={program} />
-        ))}
+      <SearchHeader 
+        searchTerm={searchTerm} 
+        setSearchTerm={setSearchTerm}
+        totalCount={data?.pages[0].count}
+      />
+      
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {allPrograms.map((program) => (
+            <ProgramCard key={program.id} program={program} />
+          ))}
+        </div>
+
+        {/* Error message */}
+        {error && (
+          <div className="text-center mt-8 p-4">
+            <p className="text-red-500 dark:text-red-400">Couldn&apos;t load programs. Please try again.</p>
+          </div>
+        )}
+
+        {/* Loading more indicator */}
+        {isFetchingNextPage && <ProgramsSkeleton />}
+
+        {/* Intersection observer target */}
+        {hasNextPage && !isFetchingNextPage && (
+          <div ref={ref} className="h-20 mt-8" />
+        )}
+
+        {/* No more programs message */}
+        {!hasNextPage && allPrograms.length > 0 && (
+          <div className="text-center mt-12 py-8">
+            <p className="text-gray-600 dark:text-gray-400">You&apos;ve reached the end of the list</p>
+          </div>
+        )}
+
+        {/* No programs found message */}
+        {status === 'success' && allPrograms.length === 0 && (
+          <div className="text-center mt-12 py-8">
+            <p className="text-gray-600 dark:text-gray-400">No programs found</p>
+          </div>
+        )}
       </div>
-
-      {/* Error message */}
-      {error && (
-        <div className="text-center mt-8 p-4">
-          <p className="text-red-500">Couldn&apos;t load programs. Please try again.</p>
-        </div>
-      )}
-
-      {/* Loading more indicator */}
-      {isFetchingNextPage && <ProgramsSkeleton />}
-
-      {/* Intersection observer target */}
-      {hasNextPage && !isFetchingNextPage && (
-        <div ref={ref} className="h-20 mt-8" />
-      )}
-
-      {/* No more programs message */}
-      {!hasNextPage && allPrograms.length > 0 && (
-        <div className="text-center mt-12 py-8">
-          <p className="text-gray-600">You&apos;ve reached the end of the list</p>
-        </div>
-      )}
-
-      {/* No programs found message */}
-      {status === 'success' && allPrograms.length === 0 && (
-        <div className="text-center mt-12 py-8">
-          <p className="text-gray-600">No programs found</p>
-        </div>
-      )}
     </>
   );
 } 

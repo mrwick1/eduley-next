@@ -1,35 +1,40 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { Program } from '@/types/program';
 import api from '@/api/config';
 import { API_ENDPOINTS } from '@/api/end-points';
-import { Program } from '@/types/program';
 
 interface ProgramsResponse {
   results: Program[];
   count: number;
 }
 
-export function usePrograms(initialData?: ProgramsResponse) {
+interface UseProductsOptions {
+  initialData?: ProgramsResponse;
+  search?: string;
+}
+
+export function usePrograms({ initialData, search }: UseProductsOptions = {}) {
   return useInfiniteQuery({
-    queryKey: ['programs'],
-    initialPageParam: 0,
-    initialData: initialData ? {
-      pages: [initialData],
-      pageParams: [0],
-    } : undefined,
-    queryFn: async ({ pageParam = 0 }) => {
+    queryKey: ['programs', search],
+    initialPageParam: 1,
+    queryFn: async ({ pageParam }: { pageParam: number }) => {
       const response = await api.get(API_ENDPOINTS.COURSE.BASE, {
         params: {
           limit: 12,
-          offset: pageParam,
+          offset: (pageParam - 1) * 12,
+          ...(search ? { search } : {}),
         },
       });
       return response.data;
     },
+    initialData: search ? undefined : initialData ? {
+      pages: [initialData],
+      pageParams: [1],
+    } : undefined,
     getNextPageParam: (lastPage, allPages) => {
-      const offset = allPages.length * 12;
-      return lastPage.results.length === 12 ? offset : undefined;
+      const totalPages = Math.ceil(lastPage.count / 12);
+      const nextPage = allPages.length + 1;
+      return nextPage <= totalPages ? nextPage : undefined;
     },
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
   });
 } 

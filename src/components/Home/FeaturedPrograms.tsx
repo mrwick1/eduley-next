@@ -15,8 +15,19 @@ interface FeaturedProgramsProps {
 const FeaturedPrograms = ({ initialPrograms }: FeaturedProgramsProps) => {
   const { config } = useTheme();
 
+  // Calculate button styles with dark mode support
+  const buttonStyles = {
+    color: config?.primary_color,
+    backgroundColor: `${config?.primary_color}10`,
+    boxShadow: `0 0 0 1px ${config?.primary_color}25`,
+  };
+
+  const buttonHoverStyles = {
+    '--hover-bg': `${config?.primary_color}20`,
+  } as React.CSSProperties;
+
   return (
-    <section className="py-20 bg-gray-50/50">
+    <section className="py-20 bg-gray-50/50 dark:bg-gray-900/50">
       <div className="container mx-auto px-4">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -26,7 +37,7 @@ const FeaturedPrograms = ({ initialPrograms }: FeaturedProgramsProps) => {
           <h2 className="text-4xl font-bold mb-4" style={{ color: config?.primary_color }}>
             Featured Programs
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Explore our curated selection of top-rated programs
           </p>
         </motion.div>
@@ -53,12 +64,10 @@ const FeaturedPrograms = ({ initialPrograms }: FeaturedProgramsProps) => {
           <Link
             href="/programs"
             className="group inline-flex items-center gap-2 px-8 py-3 rounded-full font-medium 
-                     transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
-            style={{ 
-              color: config?.primary_color,
-              backgroundColor: `${config?.primary_color}10`,
-              boxShadow: `0 0 0 1px ${config?.primary_color}25`
-            }}
+                     transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0
+                     dark:bg-opacity-20 hover:bg-[var(--hover-bg)] dark:hover:bg-[var(--hover-bg)]
+                     dark:shadow-gray-950/50"
+            style={{ ...buttonStyles, ...buttonHoverStyles }}
           >
             <span>Browse All Programs</span>
             <ArrowRight 
