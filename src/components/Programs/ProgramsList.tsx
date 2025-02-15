@@ -12,7 +12,10 @@ import { Program } from '@/types/program';
 import ProgramLink from './ProgramLink';
 
 interface ProgramsListProps {
-  programs: Program[];
+  initialPrograms: {
+    results: Program[];
+    count: number;
+  };
 }
 
 function SearchHeader({ 
@@ -60,16 +63,17 @@ function SearchHeader({
   );
 }
 
-const ProgramsList = ({ programs }: ProgramsListProps) => {
+const ProgramsList = ({ initialPrograms }: ProgramsListProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const debouncedSearch = useDebounce(searchTerm, 500);
 
+  // Add ref for infinite scroll
   const { ref, inView } = useInView({
     threshold: 0,
-    rootMargin: '100px',
+    rootMargin: '200px', // Load more when within 200px of the bottom
   });
 
   const {
@@ -81,13 +85,11 @@ const ProgramsList = ({ programs }: ProgramsListProps) => {
     status,
     isLoading
   } = usePrograms({ 
-    initialData: {
-      results: programs,
-      count: programs.length
-    },
+    initialData: initialPrograms,
     search: debouncedSearch 
   });
 
+  // Load more items when scrolling near bottom
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -110,6 +112,7 @@ const ProgramsList = ({ programs }: ProgramsListProps) => {
       <SearchHeader 
         searchTerm={searchTerm} 
         setSearchTerm={setSearchTerm} 
+        
       />
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -129,14 +132,14 @@ const ProgramsList = ({ programs }: ProgramsListProps) => {
     </>
   );
 
-  const allPrograms = data?.pages.flatMap(page => page.results) ?? [];
+  const allPrograms = data?.pages.flatMap(page => page.data) ?? [];
 
   return (
     <>
       <SearchHeader 
         searchTerm={searchTerm} 
         setSearchTerm={setSearchTerm}
-        totalCount={data?.pages[0].count}
+        totalCount={data?.pages[0].total}
       />
       
       <div className="container mx-auto px-4">
@@ -151,29 +154,25 @@ const ProgramsList = ({ programs }: ProgramsListProps) => {
           ))}
         </div>
 
-        {/* Error message */}
+        {/* Add invisible div for intersection observer */}
+        <div ref={ref} className="h-1" />
+
         {error && (
           <div className="text-center mt-8 p-4">
             <p className="text-red-500 dark:text-red-400">Couldn&apos;t load programs. Please try again.</p>
           </div>
         )}
 
-        {/* Loading more indicator */}
         {isFetchingNextPage && <ProgramsSkeleton />}
 
-        {/* Intersection observer target */}
-        {hasNextPage && !isFetchingNextPage && (
-          <div ref={ref} className="h-20 mt-8" />
-        )}
-
-        {/* No more programs message */}
         {!hasNextPage && allPrograms.length > 0 && (
           <div className="text-center mt-12 py-8">
-            <p className="text-gray-600 dark:text-gray-400">You&apos;ve reached the end of the list</p>
+            <p className="text-gray-600 dark:text-gray-400">
+              You've reached the end of the list
+            </p>
           </div>
         )}
 
-        {/* No programs found message */}
         {status === 'success' && allPrograms.length === 0 && (
           <div className="text-center mt-12 py-8">
             <p className="text-gray-600 dark:text-gray-400">No programs found</p>

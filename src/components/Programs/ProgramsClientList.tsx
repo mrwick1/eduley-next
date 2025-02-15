@@ -47,7 +47,7 @@ export default function ProgramsClientList({ initialPrograms }: ProgramsClientLi
 
   return (
     <>
-      <ProgramsList programs={programs} />
+      <ProgramsList initialPrograms={{ results: programs, count: programs.length }} />
       
      
       
