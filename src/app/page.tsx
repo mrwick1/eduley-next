@@ -55,9 +55,9 @@ export default async function Home() {
   const landingData = await getLandingPageData();
 
   return (
-    <main className="bg-white dark:bg-gray-950 min-h-screen">
+    <div className="transition-colors duration-200 bg-white dark:bg-gray-950 min-h-screen">
       <Hero initialBanners={landingData.banner_images} />
       <FeaturedPrograms initialPrograms={landingData.top_courses} />
-    </main>
+    </div>
   );
 }
