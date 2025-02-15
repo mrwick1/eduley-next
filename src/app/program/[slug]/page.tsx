@@ -1,22 +1,29 @@
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CourseDetails from "@/components/Program/CourseDetails";
 import { getProgramBySlug, getAllProgramSlugs } from "@/lib/programs";
 
+// Type for the params
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
 // Generate metadata for each program page
-// @ts-expect-error - Next.js page props type inference conflicts with explicit typing, safe to ignore as params.slug is validated
-export async function generateMetadata({ params }) {
-  const program = await getProgramBySlug(params.slug);
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  // Await the params
+  const { slug } = await params;
+  const program = await getProgramBySlug(slug);
   
   if (!program) {
     return {
-      title: 'Program Details',
-      description: 'Program not found',
+      title: 'Program Not Found | Eduley',
+      description: 'The requested program could not be found.',
     };
   }
 
   return {
-    title: program.name,
-    description: program.short_description,
+    title: `${program.name} | Eduley`,
+    description: program.short_description || 'Learn more about this educational program',
     openGraph: {
       title: program.name,
       description: program.short_description,
@@ -41,9 +48,10 @@ export async function generateStaticParams() {
   }));
 }
 
-// @ts-expect-error - Next.js page props type inference conflicts with explicit typing, safe to ignore as params.slug is validated
-export default async function ProgramPage({ params }) {
-  const program = await getProgramBySlug(params.slug);
+export default async function ProgramPage({ params }: PageProps) {
+  // Await the params
+  const { slug } = await params;
+  const program = await getProgramBySlug(slug);
   
   if (!program) {
     notFound();

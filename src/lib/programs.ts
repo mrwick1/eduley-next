@@ -26,20 +26,31 @@ export async function getProgramBySlug(slug: string): Promise<Program | null> {
   }
 }
 
-export async function getAllPrograms(): Promise<Program[]> {
+export async function getAllPrograms(page: number = 1, limit: number = 16): Promise<{
+  data: Program[];
+  hasMore: boolean;
+  total: number;
+}> {
   try {
-    const response = await api.get(`${API_ENDPOINTS.COURSE.BASE}?limit=300`);
-    const data: Program[] = response.data?.results;
-    return data;
+    const response = await api.get(`${API_ENDPOINTS.COURSE.BASE}?limit=${limit}&offset=${(page - 1) * limit}`);
+    return {
+      data: response.data?.results || [],
+      hasMore: response.data?.next !== null,
+      total: response.data?.count || 0
+    };
   } catch (error) {
     console.error('Error fetching programs:', error);
-    return [];
+    return {
+      data: [],
+      hasMore: false,
+      total: 0
+    };
   }
 }
 
 export async function getAllProgramSlugs(): Promise<{ slug: string }[]> {
-  const programs = await getAllPrograms();
-  return programs.map((program: Program) => ({
+  const programs = await getAllPrograms(1, 300,);
+  return programs.data.map((program: Program) => ({
     slug: program.slug,
   }));
 } 

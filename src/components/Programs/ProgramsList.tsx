@@ -9,6 +9,7 @@ import ProgramsSkeleton from '@/components/Programs/ProgramsSkeleton';
 import { usePrograms } from '@/hooks/usePrograms';
 import { useDebounce } from '@/hooks/useDebounce';
 import { Program } from '@/types/program';
+import ProgramLink from './ProgramLink';
 
 interface ProgramsListProps {
   programs: Program[];
@@ -139,9 +140,14 @@ const ProgramsList = ({ programs }: ProgramsListProps) => {
       />
       
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {allPrograms.map((program) => (
-            <ProgramCard key={program.id} program={program} />
+            <ProgramLink 
+              key={program.slug}
+              slug={program.slug}
+            >
+              <ProgramCard program={program} />
+            </ProgramLink>
           ))}
         </div>
 

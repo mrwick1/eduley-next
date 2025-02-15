@@ -1,7 +1,7 @@
-import { Metadata } from "next";
 import { Suspense } from 'react';
-import ProgramsList from '@/components/Programs/ProgramsList';
+import { Metadata } from "next";
 import { getAllPrograms } from '@/lib/programs';
+import ProgramsClientList from '@/components/Programs/ProgramsClientList';
 
 export const metadata: Metadata = {
   title: 'Programs | Eduley',
@@ -11,16 +11,15 @@ export const metadata: Metadata = {
 // Make this page static by setting revalidation time
 export const revalidate = 3600; // Revalidate every hour
 
-async function ProgramsPage() {
-  const programs = await getAllPrograms();
-  
+export default async function ProgramsPage() {
+  // Fetch initial data on the server
+  const initialData = await getAllPrograms(1);
+
   return (
     <main className="min-h-screen bg-white dark:bg-gray-900">
       <Suspense fallback={<div>Loading...</div>}>
-        <ProgramsList programs={programs} />
+        <ProgramsClientList initialPrograms={initialData.data} />
       </Suspense>
     </main>
   );
 }
-
-export default ProgramsPage;
