@@ -66,8 +66,7 @@ export default async function RootLayout({
   const config = await getConfig();
 
   return (
-
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <style dangerouslySetInnerHTML={{
           __html: `
@@ -77,6 +76,19 @@ export default async function RootLayout({
             }
           `
         }} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                let theme = localStorage.getItem('theme') || 'light';
+                if (theme === 'system' || !theme) {
+                  theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                }
+                document.documentElement.classList.add(theme);
+              } catch (e) {}
+            `,
+          }}
+        />
       </head>
       <body className={`${poppins.variable} antialiased`}>
       <Analytics/>

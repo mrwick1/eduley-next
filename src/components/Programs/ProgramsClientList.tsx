@@ -47,10 +47,7 @@ export default function ProgramsClientList({ initialPrograms }: ProgramsClientLi
     <>
       <ProgramsList programs={programs} />
       
-      {/* Loading trigger element */}
-      <div ref={ref} className="h-10 mt-4">
-        {isLoading && <p className="text-center">Loading more programs...</p>}
-      </div>
+     
       
       {!hasMore && programs.length > 0 && (
         <p className="text-center mt-4">No more programs to load.</p>

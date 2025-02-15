@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Bell, Menu, X } from "lucide-react"
+import { Bell, Menu, X, Sun, Moon } from "lucide-react"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { useTheme } from "@/context/ThemeContext"
@@ -75,13 +75,17 @@ const NavLink = ({ href, children }: { href: string; children: React.ReactNode }
 const DynamicHeader = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { config } = useTheme()
+  const { config, theme, setTheme } = useTheme()
 
   useEffect(() => {
     // Here you would check your auth state
     // For example: const authStatus = await checkAuthStatus()
     setIsLoggedIn(true) // Replace with actual auth check
   }, [])
+
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark')
+  }
 
   return (
     <header className="fixed w-full top-0 z-50">
@@ -112,6 +116,16 @@ const DynamicHeader = () => {
               <NavLink href="/discussion">Discussion</NavLink>
               <NavLink href="/help">Help</NavLink>
               <div className="flex items-center gap-6 pl-4 border-l border-gray-200 dark:border-gray-700">
+                <button 
+                  onClick={toggleTheme}
+                  className="relative group"
+                >
+                  {theme === 'dark' ? (
+                    <Sun className="h-5 w-5 text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors" />
+                  ) : (
+                    <Moon className="h-5 w-5 text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors" />
+                  )}
+                </button>
                 <button className="relative group">
                   <Bell className="h-5 w-5 text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors" />
                   <span className="absolute -top-1 -right-1 h-2 w-2 bg-blue-600 rounded-full" />
@@ -159,6 +173,13 @@ const DynamicHeader = () => {
                 <NavLink href="/discussion">Discussion</NavLink>
                 <NavLink href="/help">Help</NavLink>
                 <div className="flex items-center gap-4 px-4 py-2.5 mt-2 border-t border-gray-200 dark:border-gray-700">
+                  <button onClick={toggleTheme}>
+                    {theme === 'dark' ? (
+                      <Sun className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+                    ) : (
+                      <Moon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+                    )}
+                  </button>
                   <button className="relative">
                     <Bell className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                     <span className="absolute -top-1 -right-1 h-2 w-2 bg-blue-600 rounded-full" />

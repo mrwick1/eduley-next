@@ -28,7 +28,8 @@ const ProgramCard = ({ program }: ProgramCardProps) => {
     <div 
       onClick={handleClick}
       className="group bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 
-                dark:border-gray-700 hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden"
+                dark:border-gray-700 hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden
+                flex flex-col h-[30rem]"
     >
       {/* Decorative elements */}
       <div 
@@ -60,8 +61,9 @@ const ProgramCard = ({ program }: ProgramCardProps) => {
         </div>
       </div>
 
-      <div className="p-5 space-y-4">
-        <div className="flex items-center gap-2">
+      <div className="p-5 flex flex-col h-full">
+        {/* Tags section */}
+        <div className="flex items-center gap-2 mb-4">
           <div className="flex items-center text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
             <Clock className="w-3.5 h-3.5 mr-1" />
             {program.duration_in_weeks}w
@@ -72,19 +74,23 @@ const ProgramCard = ({ program }: ProgramCardProps) => {
           </div>
         </div>
 
-        <div>
-          <h3 className="text-lg font-bold mb-2 line-clamp-2 text-gray-900 dark:text-white 
-                       group-hover:text-primary dark:group-hover:text-primary transition-colors">
+        {/* Title and description section */}
+        <div className="mb-4">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white 
+                         group-hover:text-primary dark:group-hover:text-primary transition-colors
+                         line-clamp-2 ">
             {program.name}
           </h3>
           {program.short_description && (
-            <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2">
+            <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 
+                          mt-2">
               {program.short_description}
             </p>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* Instructor section */}
+        <div className="flex items-center gap-2 mb-4">
           <div 
             className="w-7 h-7 rounded-full flex items-center justify-center"
             style={{ backgroundColor: `${config?.primary_color}15` }}
@@ -96,7 +102,8 @@ const ProgramCard = ({ program }: ProgramCardProps) => {
           </span>
         </div>
 
-        <div className="pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
+        {/* Price and button section */}
+        <div className="border-t border-gray-100 dark:border-gray-700 flex justify-between items-center pt-4 mt-auto">
           <div>
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Course Fee</p>
             <span 
