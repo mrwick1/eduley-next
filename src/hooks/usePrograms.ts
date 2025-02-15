@@ -1,13 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Program } from '@/types/program';
-import api from '@/api/config';
-import { API_ENDPOINTS } from '@/api/end-points';
 import { getAllPrograms } from '@/lib/programs';
 
-interface ProgramsResponse {
-  results: Program[];
-  count: number;
-}
+
 
 interface UseProgramsOptions {
   initialData?: {
