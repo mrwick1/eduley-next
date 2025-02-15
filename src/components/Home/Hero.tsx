@@ -48,7 +48,7 @@ const Hero = () => {
           </div>
           <div className="relative h-[300px] sm:h-[400px] lg:h-[500px] mt-8 lg:mt-0">
             <Image
-              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
+              src="https://media.istockphoto.com/id/1358014313/photo/group-of-elementary-students-having-computer-class-with-their-teacher-in-the-classroom.jpg?s=612x612&w=0&k=20&c=3xsykmHXFa9ejL_sP2Xxiow7zdtmKvg15UxXFfgR98Q="
               alt="Students collaborating in a modern learning environment"
               fill
               className="object-cover rounded-xl sm:rounded-2xl shadow-xl"
