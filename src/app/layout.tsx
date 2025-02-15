@@ -7,6 +7,9 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QueryProvider from '@/providers/QueryProvider';
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+
 
 const poppins = Poppins({
   weight: ['400', '500', '600', '700'],
@@ -63,6 +66,7 @@ export default async function RootLayout({
   const config = await getConfig();
 
   return (
+
     <html lang="en">
       <head>
         <style dangerouslySetInnerHTML={{
@@ -75,6 +79,8 @@ export default async function RootLayout({
         }} />
       </head>
       <body className={`${poppins.variable} antialiased`}>
+      <Analytics/>
+      <SpeedInsights/>
         <QueryProvider>
           <ThemeProvider config={config}>
             <ErrorBoundary fallback={<div>Something went wrong</div>}>

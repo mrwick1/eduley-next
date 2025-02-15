@@ -8,10 +8,10 @@ const Footer = () => {
   const { config } = useTheme();
 
   return (
-    <footer className="relative bg-gradient-to-b from-gray-900 to-black dark:from-gray-950 dark:to-black text-gray-300 overflow-hidden">
+    <footer className="relative bg-gray-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black text-gray-600 dark:text-gray-300 overflow-hidden">
       {/* Subtle gradient overlay */}
       <div 
-        className="absolute inset-0 opacity-50 dark:opacity-30"
+        className="absolute inset-0 opacity-30 dark:opacity-50"
         style={{
           background: `linear-gradient(135deg, ${config?.primary_color || '#6C1717'}33 0%, transparent 100%)`
         }}
@@ -31,18 +31,18 @@ const Footer = () => {
                 className="object-contain dark:brightness-110"
               />
             ) : (
-              <h3 className="text-2xl font-bold text-white tracking-tight">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">
                 {config?.name || 'Eduley'}
               </h3>
             )}
-            <p className="text-gray-300 dark:text-gray-400 leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
               {config?.tagline || 'Empowering dreams through education'}
             </p>
             <div className="flex space-x-4 pt-4">
               {config?.facebook_link && (
                 <a 
                   href={config.facebook_link} 
-                  className="text-gray-400 hover:text-white dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
                   style={{ color: config.secondary_color }}
                 >
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -53,7 +53,7 @@ const Footer = () => {
               {config?.twitter_link && (
                 <a 
                   href={config.twitter_link} 
-                  className="text-gray-400 hover:text-white dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
                   style={{ color: config.secondary_color }}
                 >
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -66,8 +66,8 @@ const Footer = () => {
 
           {/* Contact Information */}
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-white dark:text-gray-200">Contact</h4>
-            <div className="space-y-3 text-gray-300 dark:text-gray-400">
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-200">Contact</h4>
+            <div className="space-y-3 text-gray-600 dark:text-gray-400">
               <p className="flex items-center space-x-3">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -85,15 +85,15 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-white dark:text-gray-200">Quick Links</h4>
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-200">Quick Links</h4>
             <ul className="space-y-3">
               <li>
-                <Link href="/terms" className="text-gray-300 dark:text-gray-400 hover:text-white dark:hover:text-gray-200 transition-colors">
+                <Link href="/terms" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
                   Terms of Use
                 </Link>
               </li>
               <li>
-                <Link href="/help" className="text-gray-300 dark:text-gray-400 hover:text-white dark:hover:text-gray-200 transition-colors">
+                <Link href="/help" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
                   Help Center
                 </Link>
               </li>
@@ -102,8 +102,8 @@ const Footer = () => {
 
           {/* Support Section */}
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-white dark:text-gray-200">Support</h4>
-            <p className="text-gray-300 dark:text-gray-400 leading-relaxed">
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-200">Support</h4>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
               Having issues with the system? Want to report a bug? Let us know.
             </p>
             <Link
@@ -124,7 +124,7 @@ const Footer = () => {
         </div>
 
         {/* Footer Bottom */}
-        <div className="border-t border-gray-800 dark:border-gray-800/50 mt-12 pt-8 text-sm text-gray-400 dark:text-gray-500">
+        <div className="border-t border-gray-200 dark:border-gray-800 dark:border-gray-800/50 mt-12 pt-8 text-sm text-gray-500 dark:text-gray-500">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p>© {new Date().getFullYear()} {config?.name || 'Eduley'}. All rights reserved.</p>
             <p className="mt-2 md:mt-0">Powered by Eduley</p>

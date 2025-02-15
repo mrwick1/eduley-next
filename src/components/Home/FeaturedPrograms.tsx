@@ -7,6 +7,7 @@ import ProgramCard from '@/components/Programs/ProgramCard'
 import { useTheme } from "@/context/ThemeContext"
 import { ArrowRight } from "lucide-react"
 import Link from 'next/link'
+import ProgramLink from "../Programs/ProgramLink"
 
 interface FeaturedProgramsProps {
   initialPrograms: Program[];
@@ -50,7 +51,12 @@ const FeaturedPrograms = ({ initialPrograms }: FeaturedProgramsProps) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
             >
-              <ProgramCard program={program} />
+              <ProgramLink 
+              key={program.slug}
+              slug={program.slug}
+            >
+                <ProgramCard program={program} />
+              </ProgramLink>
             </motion.div>
           ))}
         </div>

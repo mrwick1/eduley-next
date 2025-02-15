@@ -34,9 +34,9 @@ const tabs = [
     icon: <User2 className="w-5 h-5" />,
   },
   {
-    id: 'reviews',
-    label: 'Reviews',
-    title: 'Student Reviews',
+    id: 'reviewers',
+    label: 'Reviewers',
+    title: 'Course Reviewers',
     icon: <MessageSquare className="w-5 h-5" />,
   },
 ] as const;
@@ -114,7 +114,7 @@ export default function CourseDetails({ program }: CourseDetailsProps) {
               {activeTab === 'instructor' && program.instructor && (
                 <CourseInstructor instructor={program.instructor} />
               )}
-              {activeTab === 'reviews' && (
+              {activeTab === 'reviewers' && (
                 <CourseReviewers reviewers={program.reviewers} />
               )}
             </motion.div>

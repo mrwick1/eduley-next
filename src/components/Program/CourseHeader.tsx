@@ -1,12 +1,16 @@
 import Image from "next/image";
 import { Play } from "lucide-react";
 import { Program } from "@/types/program";
+import { useState } from "react";
+import VideoModal from "./VideoModal";
 
 interface CourseHeaderProps {
   program: Program;
 }
 
 export default function CourseHeader({ program }: CourseHeaderProps) {
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
   return (
     <div className="relative bg-white dark:bg-gray-900">
       <div className="container mx-auto px-4 py-16 lg:py-24">
@@ -15,7 +19,7 @@ export default function CourseHeader({ program }: CourseHeaderProps) {
             {/* Left Content */}
             <div className="space-y-8">
               {/* Course Tags */}
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3 capitalize">
                 <span className="px-4 py-1.5 bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full text-sm font-medium">
                   {program.course_level}
                 </span>
@@ -37,28 +41,28 @@ export default function CourseHeader({ program }: CourseHeaderProps) {
               </div>
 
               {/* Course Stats */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-6">
-                <div>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">Duration</p>
-                  <p className="text-gray-900 dark:text-white font-semibold">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-6 p-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-800">
+                <div className="flex flex-col">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Duration</p>
+                  <p className="text-gray-900 dark:text-white text-lg font-semibold">
                     {program.duration_in_weeks} weeks
                   </p>
                 </div>
-                <div>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">Lessons</p>
-                  <p className="text-gray-900 dark:text-white font-semibold">
+                <div className="flex flex-col">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Lessons</p>
+                  <p className="text-gray-900 dark:text-white text-lg font-semibold">
                     {program.total_content_type.total_lessons}
                   </p>
                 </div>
-                <div>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">Quizzes</p>
-                  <p className="text-gray-900 dark:text-white font-semibold">
+                <div className="flex flex-col">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Quizzes</p>
+                  <p className="text-gray-900 dark:text-white text-lg font-semibold">
                     {program.total_content_type.total_quizes}
                   </p>
                 </div>
-                <div>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">Assignments</p>
-                  <p className="text-gray-900 dark:text-white font-semibold">
+                <div className="flex flex-col">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Assignments</p>
+                  <p className="text-gray-900 dark:text-white text-lg font-semibold">
                     {program.total_content_type.total_assignments}
                   </p>
                 </div>
@@ -94,7 +98,10 @@ export default function CourseHeader({ program }: CourseHeaderProps) {
                   />
                   
                   {program.intro_video_media && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 cursor-pointer group">
+                    <div 
+                      className="absolute inset-0 flex items-center justify-center bg-black/30 cursor-pointer group"
+                      onClick={() => setIsVideoModalOpen(true)}
+                    >
                       {/* Play button */}
                       <div className="w-16 h-16 flex items-center justify-center rounded-full bg-white/95 group-hover:bg-white transition-all group-hover:scale-105 shadow-lg">
                         <Play className="w-6 h-6 text-blue-600 fill-blue-600" />
@@ -103,6 +110,15 @@ export default function CourseHeader({ program }: CourseHeaderProps) {
                   )}
                 </div>
               </div>
+
+              {/* Video Modal */}
+              {program.intro_video_media && (
+                <VideoModal
+                  videoUrl={program.intro_video_media.url || ''}
+                  isOpen={isVideoModalOpen}
+                  onClose={() => setIsVideoModalOpen(false)}
+                />
+              )}
 
               {/* Video Info Card */}
               <div className="mt-6 flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
