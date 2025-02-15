@@ -11,10 +11,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { Program } from '@/types/program';
 
 interface ProgramsListProps {
-  initialData: {
-    results: Program[];
-    count: number;
-  };
+  programs: Program[];
 }
 
 function SearchHeader({ 
@@ -62,7 +59,7 @@ function SearchHeader({
   );
 }
 
-export default function ProgramsList({ initialData }: ProgramsListProps) {
+const ProgramsList = ({ programs }: ProgramsListProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -83,7 +80,10 @@ export default function ProgramsList({ initialData }: ProgramsListProps) {
     status,
     isLoading
   } = usePrograms({ 
-    initialData,
+    initialData: {
+      results: programs,
+      count: programs.length
+    },
     search: debouncedSearch 
   });
 
@@ -176,4 +176,6 @@ export default function ProgramsList({ initialData }: ProgramsListProps) {
       </div>
     </>
   );
-} 
+};
+
+export default ProgramsList; 

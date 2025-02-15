@@ -71,7 +71,7 @@ export default function CourseHeader({ program }: CourseHeaderProps) {
                     "Free"
                   ) : (
                     <>
-                      {program.currency.prefix} {program.price}
+                      {program.price_currency?.prefix} {program.price}
                     </>
                   )}
                 </div>
@@ -86,7 +86,7 @@ export default function CourseHeader({ program }: CourseHeaderProps) {
               <div className="aspect-[16/9] rounded-2xl overflow-hidden bg-gray-50 dark:bg-gray-800 shadow-md">
                 <div className="relative w-full h-full">
                   <Image
-                    src={program.poster_images || ''}
+                    src={program.poster_image?.media_file || program.poster_image?.url || ''}
                     alt={program.name}
                     fill
                     className="object-cover"

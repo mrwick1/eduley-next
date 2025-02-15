@@ -24,7 +24,6 @@ const ProgramCard = ({ program }: ProgramCardProps) => {
   const handleClick = () => {
     router.push(`/program/${program.slug}`);
   };
-
   return (
     <div 
       onClick={handleClick}
@@ -39,7 +38,7 @@ const ProgramCard = ({ program }: ProgramCardProps) => {
       
       <div className="relative aspect-[3/2] overflow-hidden">
         <Image
-          src={program.poster_images}
+          src={program.poster_image?.media_file || program.poster_image?.url || program?.poster_images || ''}
           alt={program.name}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"

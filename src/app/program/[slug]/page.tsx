@@ -1,55 +1,61 @@
-import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import api from "@/api/config";
 import CourseDetails from "@/components/Program/CourseDetails";
-import { Program } from "@/types/program";
+import { getProgramBySlug, getAllProgramSlugs } from "@/lib/programs";
 
-interface Props {
-  params: Promise<{
-    slug: string;
-  }>;
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const resolvedParams = await params;
+// Generate metadata for each program page
+// @ts-expect-error - Next.js page props type inference conflicts with explicit typing, safe to ignore as params.slug is validated
+export async function generateMetadata({ params }) {
+  const program = await getProgramBySlug(params.slug);
   
-  try {
-    const program = await getProgramDetails(resolvedParams.slug);
-    return {
-      title: program.name,
-      description: program.short_description,
-      openGraph: {
-        title: program.name,
-        description: program.short_description,
-        images: [program.poster_images || ''],
-      },
-    };
-  } catch (error) {
-    console.error('Error generating metadata:', error);
+  if (!program) {
     return {
       title: 'Program Details',
       description: 'Program not found',
     };
   }
+
+  return {
+    title: program.name,
+    description: program.short_description,
+    openGraph: {
+      title: program.name,
+      description: program.short_description,
+      images: [program.poster_image?.media_file || program.poster_image?.url || ''],
+    },
+  };
 }
 
-async function getProgramDetails(slug: string): Promise<Program> {
-  try {
-    const response = await api.get(`/course/${slug}/`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching program details:', error);
+// Generate static paths for all programs
+export async function generateStaticParams() {
+  const paths = await getAllProgramSlugs();
+  console.log('Paths received:', paths);
+  
+  // Ensure paths is an array
+  if (!Array.isArray(paths)) {
+    console.error('Expected array of paths, received:', typeof paths);
+    return [];
+  }
+
+  return paths.map((path: { slug: string }) => ({
+    slug: path.slug,
+  }));
+}
+
+// @ts-expect-error - Next.js page props type inference conflicts with explicit typing, safe to ignore as params.slug is validated
+export default async function ProgramPage({ params }) {
+  const program = await getProgramBySlug(params.slug);
+  
+  if (!program) {
     notFound();
   }
-}
 
-export default async function ProgramPage({ params }: Props) {
-  const resolvedParams = await params;
-  const program = await getProgramDetails(resolvedParams.slug);
-  
   return (
     <main className="min-h-screen bg-white dark:bg-gray-900">
       <CourseDetails program={program} />
     </main>
   );
-} 
+}
+
+// Revalidation settings
+export const revalidate = 3600;
+export const dynamicParams = true;

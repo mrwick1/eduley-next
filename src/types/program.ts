@@ -3,8 +3,13 @@ export interface Program {
   name: string;
   slug: string;
   description?: string;
-  poster_images: string;
-  poster_image: number;
+  poster_image: {
+    id: number;
+    name: string;
+    media_type: string;
+    media_file: string | null;
+    url: string;
+  };
   price: number;
   is_course_free: boolean;
   status: string;
@@ -85,6 +90,15 @@ export interface Program {
     prefix: string;
     suffix: string | null;
   };
+  price_currency: {
+    id: number;
+    currency_name: string;
+    currency_description: string;
+    is_default: boolean;
+    short_code: string;
+    prefix: string;
+    suffix: string | null;
+  };
   institute: {
     id?: number;
     name: string;
@@ -112,6 +126,10 @@ export interface Program {
     is_active: boolean;
     groups: number[];
   }[];
+  poster_images:''
+  
+ 
+  intro_video?: string;
 }
 
 export interface Section {
