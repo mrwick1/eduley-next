@@ -9,6 +9,9 @@ import { getInstituteConfig } from "@/api/config";
 export const dynamic = 'force-static';
 export const revalidate = 3600; // Revalidate every hour
 
+// Cache the data at build time
+export const fetchCache = 'force-cache';
+
 // Generate static metadata
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getInstituteConfig();
@@ -30,7 +33,11 @@ export async function generateStaticParams() {
 
 async function getLandingPageData() {
   try {
-    const response = await api.get(API_ENDPOINTS.LANDING_PAGE);
+    const response = await api.get(API_ENDPOINTS.LANDING_PAGE, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400'
+      }
+    });
     return {
       banner_images: response.data.banner_images || [],
       top_courses: response.data.top_courses || [],
@@ -40,7 +47,7 @@ async function getLandingPageData() {
     };
   } catch (error) {
     console.error('Error fetching landing page data:', error);
-    return { 
+    return {
       banner_images: [],
       top_courses: [],
       description: '',
