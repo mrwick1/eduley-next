@@ -21,6 +21,8 @@ export default function ProgramsClientList({ initialPrograms }: ProgramsClientLi
     rootMargin: '100px',
   });
 
+  console.log(ref)
+
   const loadPrograms = useCallback(async () => {
     if (isLoading || !hasMore) return;
 
