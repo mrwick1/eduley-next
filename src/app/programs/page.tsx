@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import ProgramsList from '@/components/Programs/ProgramsList';
 import api from "@/api/config";
 import { API_ENDPOINTS } from "@/api/end-points";
-import { Program } from "@/types/program";
 
 export const metadata: Metadata = {
   title: 'Programs | Eduley',

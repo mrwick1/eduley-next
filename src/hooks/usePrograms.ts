@@ -3,14 +3,12 @@ import api from '@/api/config';
 import { API_ENDPOINTS } from '@/api/end-points';
 import { Program } from '@/types/program';
 
-const ITEMS_PER_PAGE = 12;
-
 interface ProgramsResponse {
   results: Program[];
   count: number;
 }
 
-export function usePrograms(initialData?: any) {
+export function usePrograms(initialData?: ProgramsResponse) {
   return useInfiniteQuery({
     queryKey: ['programs'],
     initialPageParam: 0,
