@@ -21,10 +21,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       openGraph: {
         title: program.name,
         description: program.short_description,
-        images: [program.poster_image.media_file || ''],
+        images: [program.poster_images || ''],
       },
     };
   } catch (error) {
+    console.error('Error generating metadata:', error);
     return {
       title: 'Program Details',
       description: 'Program not found',

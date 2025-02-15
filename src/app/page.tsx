@@ -4,7 +4,6 @@ import FeaturedPrograms from "@/components/Home/FeaturedPrograms";
 import api from "@/api/config";
 import { API_ENDPOINTS } from "@/api/end-points";
 import { getInstituteConfig } from "@/api/config";
-import { Program } from "@/types/program";
 
 // Force static generation
 export const dynamic = 'force-static';

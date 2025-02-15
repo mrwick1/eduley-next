@@ -32,8 +32,7 @@ const Hero = ({ initialBanners }: HeroProps) => {
     return () => clearInterval(timer);
   }, [banners.length]);
 
-  // Debug log
-  console.log('Current Banner:', banners[currentIndex]);
+  
 
   const currentBanner = banners[currentIndex];
   const imageUrl = currentBanner.media.url || currentBanner.media.media_file;

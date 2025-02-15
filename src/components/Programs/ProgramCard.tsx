@@ -13,7 +13,6 @@ interface ProgramCardProps {
 const ProgramCard = ({ program }: ProgramCardProps) => {
   const { config } = useTheme();
   const router = useRouter();
-  console.log(program,'program');
   // Updated price formatting with Free case
   const priceDisplay = program.is_course_free
     ? "FREE"

@@ -118,7 +118,7 @@ export default function CourseDescription({ program }: CourseDescriptionProps) {
         variants={item}
         className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-6"
       >
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">What You'll Learn</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">What You&apos;ll Learn</h2>
         <div className="grid sm:grid-cols-2 gap-4">
           {program.what_will_student_learn.split(',').map((item, index) => (
             <div key={index} className="flex items-start gap-3">
