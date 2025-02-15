@@ -26,6 +26,7 @@ const checkOnMaintain = async () => {
 };
 
 // Create a single Axios instance
+const DOMAIN = 'https://demoinstitute.dev.eduley.com';
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -33,23 +34,27 @@ const api = axios.create({
     "Content-Type": "application/json",
     Accept: "application/json",
     host: "backend-dev.eduley.com",
-    origin: "https://demoinstitute.dev.eduley.com",
-    referer: "https://demoinstitute.dev.eduley.com/",
+    origin: DOMAIN,
+    referer: `${DOMAIN}/`,
   },
 });
 
 // Request Interceptor
 api.interceptors.request.use(
   async (options) => {
-    // Check if we're in a browser environment before using localStorage
     if (typeof window !== 'undefined') {
       localStorage.setItem("mode", "notmaintain");
     }
 
     const token = getAuthToken();
+    
+    // Set headers correctly
+    options.headers.set('origin', DOMAIN);
+    options.headers.set('referer', `${DOMAIN}/`);
     if (token) {
-      options.headers["Authorization"] = `JWT ${token}`;
+      options.headers.set('Authorization', `JWT ${token}`);
     }
+
     return options;
   },
   (error) => Promise.reject(error)
