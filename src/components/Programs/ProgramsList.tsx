@@ -5,8 +5,16 @@ import { useInView } from 'react-intersection-observer';
 import ProgramCard from '@/components/Programs/ProgramCard';
 import ProgramsSkeleton from '@/components/Programs/ProgramsSkeleton';
 import { usePrograms } from '@/hooks/usePrograms';
+import { Program } from '@/types/program';
 
-export default function ProgramsList() {
+interface ProgramsListProps {
+  initialData: {
+    results: Program[];
+    count: number;
+  };
+}
+
+export default function ProgramsList({ initialData }: ProgramsListProps) {
   const { ref, inView } = useInView({
     threshold: 0,
     rootMargin: '100px',
@@ -19,8 +27,8 @@ export default function ProgramsList() {
     hasNextPage,
     isFetchingNextPage,
     status,
-    refetch,
-  } = usePrograms();
+    isLoading
+  } = usePrograms(initialData);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -28,7 +36,7 @@ export default function ProgramsList() {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  if (status === 'pending' || status === 'error') return <ProgramsSkeleton />;
+  if (isLoading ) return <ProgramsSkeleton />;
 
   const allPrograms = data?.pages.flatMap(page => page.results) ?? [];
 
@@ -44,12 +52,6 @@ export default function ProgramsList() {
       {error && (
         <div className="text-center mt-8 p-4">
           <p className="text-red-500">Couldn&apos;t load programs. Please try again.</p>
-          <button
-            onClick={refetch}
-            className="mt-2 text-primary hover:underline"
-          >
-            Try Again
-          </button>
         </div>
       )}
 

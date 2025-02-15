@@ -1,14 +1,37 @@
-import { Suspense } from 'react';
+import { Metadata } from "next";
 import ProgramsList from '@/components/Programs/ProgramsList';
-import ProgramsSkeleton from '@/components/Programs/ProgramsSkeleton';
-import { Metadata } from 'next';
+import api from "@/api/config";
+import { API_ENDPOINTS } from "@/api/end-points";
+import { Program } from "@/types/program";
 
 export const metadata: Metadata = {
   title: 'Programs | Eduley',
   description: 'Browse all our educational programs and courses',
 };
 
-export default function ProgramsPage() {
+// Force static generation
+export const dynamic = 'force-static';
+export const revalidate = 3600; // Revalidate every hour
+
+// Fetch initial data at build time
+async function getInitialPrograms() {
+  try {
+    const response = await api.get(API_ENDPOINTS.COURSE.BASE, {
+      params: {
+        limit: 12,
+        offset: 0,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching programs:', error);
+    return { results: [], count: 0 };
+  }
+}
+
+export default async function Programs() {
+  const initialData = await getInitialPrograms();
+
   return (
     <div className="bg-gray-50/50 py-20">
       <div className="container mx-auto px-4">
@@ -19,9 +42,7 @@ export default function ProgramsPage() {
           </p>
         </div>
         
-        <Suspense fallback={<ProgramsSkeleton />}>
-          <ProgramsList />
-        </Suspense>
+        <ProgramsList initialData={initialData} />
       </div>
     </div>
   );
