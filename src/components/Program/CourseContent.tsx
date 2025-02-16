@@ -1,4 +1,4 @@
-import { ChevronDown, FileText, PlayCircle, PenLine, Lock, CheckCircle2 } from "lucide-react";
+import {  FileText, PlayCircle, PenLine, Lock, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Accordion,
