@@ -1,8 +1,9 @@
 import Image from "next/image";
-import { Play } from "lucide-react";
+import { Play, ChevronRight, BookOpen, Tag } from "lucide-react";
 import { Program } from "@/types/program";
 import { useState } from "react";
 import VideoModal from "./VideoModal";
+import Link from "next/link";
 
 interface CourseHeaderProps {
   program: Program;
@@ -15,18 +16,36 @@ export default function CourseHeader({ program }: CourseHeaderProps) {
     <div className="relative bg-white dark:bg-gray-900">
       <div className="container mx-auto px-4 py-16 lg:py-24">
         <div className="max-w-[1536px] mx-auto">
+          {/* Breadcrumbs */}
+          <div className="mb-8">
+            <nav className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+              <Link 
+                href="/programs" 
+                className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+              >
+                Programs
+              </Link>
+              <ChevronRight className="w-4 h-4" />
+              <span className="text-gray-900 dark:text-white font-medium">
+                {program.name}
+              </span>
+            </nav>
+          </div>
+
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             {/* Left Content */}
             <div className="space-y-8">
               {/* Course Tags */}
-              <div className="flex flex-wrap items-center gap-3 capitalize">
-                <span className="px-4 py-1.5 bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full text-sm font-medium">
-                  {program.course_level}
-                </span>
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-2 px-4 py-1.5 bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full text-sm font-medium">
+                  <BookOpen className="w-4 h-4" />
+                  <span className="capitalize">Level: {program.course_level}</span>
+                </div>
                 {program.category && (
-                  <span className="px-4 py-1.5 bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-300 rounded-full text-sm">
-                    {program.category.name}
-                  </span>
+                  <div className="flex items-center gap-2 px-4 py-1.5 bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-300 rounded-full text-sm">
+                    <Tag className="w-4 h-4" />
+                    <span className="capitalize">Category: {program.category.name}</span>
+                  </div>
                 )}
               </div>
 

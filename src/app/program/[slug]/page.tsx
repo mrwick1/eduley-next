@@ -63,7 +63,6 @@ export default async function ProgramPage({ params }: PageProps) {
     </main>
   );
 }
-
 // Revalidation settings
 export const revalidate = 3600;
 export const dynamicParams = true;

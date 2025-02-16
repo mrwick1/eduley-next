@@ -28,13 +28,13 @@ function SearchHeader({
   totalCount?: number;
 }) {
   return (
-    <div className="w-full py-8 mb-8">
+    <div className="w-full py-4 sm:py-6 md:py-8 mb-4 sm:mb-6 md:mb-8">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row md:items-top md:justify-between gap-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             Explore Programs
           </h1>
-          <div className="w-full md:w-96">
+          <div className="w-full sm:w-auto md:w-96">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-5 w-5 text-gray-400" />
@@ -44,7 +44,7 @@ function SearchHeader({
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search programs..."
-                className="block w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-lg 
+                className="block w-full pl-10 pr-4 py-2 sm:py-3 border border-gray-200 dark:border-gray-700 rounded-lg 
                          bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
                          focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
                          placeholder-gray-500 dark:placeholder-gray-400
@@ -83,11 +83,19 @@ const ProgramsList = ({ initialPrograms }: ProgramsListProps) => {
     hasNextPage,
     isFetchingNextPage,
     status,
-    isLoading
+    isLoading,
+    refetch
   } = usePrograms({ 
     initialData: initialPrograms,
     search: debouncedSearch 
   });
+
+  // Add effect to refetch when search changes
+  useEffect(() => {
+    if (debouncedSearch !== searchParams.get('search')) {
+      refetch();
+    }
+  }, [debouncedSearch, refetch, searchParams]);
 
   // Load more items when scrolling near bottom
   useEffect(() => {
@@ -107,21 +115,21 @@ const ProgramsList = ({ initialPrograms }: ProgramsListProps) => {
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   }, [debouncedSearch, pathname, router, searchParams]);
 
-  if (isLoading) return (
+  // Only show loading state when initially loading
+  if (isLoading && !data) return (
     <>
       <SearchHeader 
         searchTerm={searchTerm} 
         setSearchTerm={setSearchTerm} 
-        
       />
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-6">
           {[...Array(8)].map((_, index) => (
             <div 
               key={index}
-              className="rounded-lg border border-gray-200 dark:border-gray-700 p-4 space-y-3"
+              className="rounded-lg border border-gray-200 dark:border-gray-700 p-3 sm:p-4 space-y-2 sm:space-y-3"
             >
-              <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+              <div className="w-full aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
               <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 animate-pulse" />
               <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 animate-pulse" />
               <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 animate-pulse" />
@@ -142,8 +150,8 @@ const ProgramsList = ({ initialPrograms }: ProgramsListProps) => {
         totalCount={data?.pages[0].total}
       />
       
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="container mx-auto px-4 pb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-6">
           {allPrograms.map((program) => (
             <ProgramLink 
               key={program.slug}
@@ -152,21 +160,22 @@ const ProgramsList = ({ initialPrograms }: ProgramsListProps) => {
               <ProgramCard program={program} />
             </ProgramLink>
           ))}
+
+          {/* Loading more skeleton items inline with the grid */}
+          {isFetchingNextPage && <ProgramsSkeleton />}
         </div>
 
-        {/* Add invisible div for intersection observer */}
+        {/* Intersection observer reference */}
         <div ref={ref} className="h-1" />
 
         {error && (
-          <div className="text-center mt-8 p-4">
+          <div className="text-center mt-6 sm:mt-8 p-4">
             <p className="text-red-500 dark:text-red-400">Couldn&apos;t load programs. Please try again.</p>
           </div>
         )}
 
-        {isFetchingNextPage && <ProgramsSkeleton />}
-
         {!hasNextPage && allPrograms.length > 0 && (
-          <div className="text-center mt-12 py-8">
+          <div className="text-center mt-8 sm:mt-12 py-6 sm:py-8">
             <p className="text-gray-600 dark:text-gray-400">
               You&apos;ve reached the end of the list
             </p>
@@ -174,7 +183,7 @@ const ProgramsList = ({ initialPrograms }: ProgramsListProps) => {
         )}
 
         {status === 'success' && allPrograms.length === 0 && (
-          <div className="text-center mt-12 py-8">
+          <div className="text-center mt-8 sm:mt-12 py-6 sm:py-8">
             <p className="text-gray-600 dark:text-gray-400">No programs found</p>
           </div>
         )}

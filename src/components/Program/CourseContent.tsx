@@ -79,13 +79,7 @@ export default function CourseContent({ sections = [] }: CourseContentProps) {
                     )}
                   </div>
                 </div>
-                <motion.div
-                  initial={false}
-                  animate={{ rotate: 0 }}
-                  className="text-gray-400"
-                >
-                  <ChevronDown className="h-5 w-5 transition-transform duration-200" />
-                </motion.div>
+              
               </div>
             </AccordionTrigger>
             <AccordionContent>

@@ -5,7 +5,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Bell, Menu, X, Sun, Moon } from "lucide-react"
 import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useTheme } from "@/context/ThemeContext"
 import { usePathname } from 'next/navigation'
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
@@ -76,6 +76,34 @@ const DynamicHeader = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { config, theme, setTheme } = useTheme()
+  const pathname = usePathname()
+  const mobileMenuRef = useRef<HTMLDivElement>(null)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
+
+  // Close mobile menu on navigation
+  useEffect(() => {
+    setIsMobileMenuOpen(false)
+  }, [pathname])
+
+  // Handle clicks outside of mobile menu
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isMobileMenuOpen &&
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target as Node) &&
+        menuButtonRef.current &&
+        !menuButtonRef.current.contains(event.target as Node)
+      ) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isMobileMenuOpen])
 
   useEffect(() => {
     // Here you would check your auth state
@@ -144,6 +172,7 @@ const DynamicHeader = () => {
         </nav>
         <div className="md:hidden">
           <Button 
+            ref={menuButtonRef}
             variant="ghost" 
             size="icon" 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -158,6 +187,7 @@ const DynamicHeader = () => {
       </div>
       {isMobileMenuOpen && (
         <motion.div
+          ref={mobileMenuRef}
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
